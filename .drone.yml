@@ -66,7 +66,7 @@ pipeline:
       - TF_VAR_MOCK_KEY
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
-  
+
   # apply:
   #   image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
   #   commands:
