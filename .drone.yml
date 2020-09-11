@@ -1,16 +1,5 @@
 pipeline:
 
-  # run-testrunner-tests:
-  #   image: quay.io/ukhomeofficedigital/tf-testrunner:32
-  #   commands:
-  #     - python -m unittest tests/e2e.py
-  #     - echo $${AWS_ACCESS_KEY_ID}
-  #   secrets:
-  #     - AWS_ACCESS_KEY_ID
-  #     - AWS_SECRET_ACCESS_KEY
-  #   when:
-  #     event: push
-
   init:
     image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
     pull: true
@@ -30,6 +19,19 @@ pipeline:
     secrets:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
+
+  # run-testrunner-tests:
+  #   image: quay.io/ukhomeofficedigital/tf-testrunner:32
+  #   commands:
+  #     - python -m unittest tests/e2e.py
+  #     - echo $${AWS_ACCESS_KEY_ID}
+  #   secrets:
+  #     - AWS_ACCESS_KEY_ID
+  #     - AWS_SECRET_ACCESS_KEY
+  #   when:
+  #     event: push
+
+
 
   # testsuite:
   #   image: docker:18.05
