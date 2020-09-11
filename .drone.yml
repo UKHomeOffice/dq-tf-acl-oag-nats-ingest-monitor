@@ -10,63 +10,63 @@ pipeline:
       - AWS_SECRET_ACCESS_KEY
     when:
       event: push
-  # 
-  # init:
-  #   image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
-  #   pull: true
-  #   commands:
-  #     - export MOCK_ID=$${AWS_ACCESS_KEY_ID}
-  #     - export MOCK_KEY=$${AWS_SECRET_ACCESS_KEY}
-  #     - echo -e "provider \"aws\" {\n  region = \"eu-west-2\"\n}" > provider.tf
-  #     - echo -e "terraform {\n  backend \"s3\" {}\n}" > backend.tf
-  #     - echo -e "remote_state {\n  backend = \"s3\"\n  config = {\n  bucket = \"dacc-dq-test-coral-team\"\n  region = \"eu-west-2\"\n  dynamodb_table = \"terraform-state\"\n  key = \"test/dq-tf-acl-sftp-monitor-terraform-12.tfstate\"\n  encrypt = true \n  }\n}" > terragrunt.hcl
-  #     - terragrunt init
-  #   when:
-  #     event: push
-  #   secrets:
-  #     - AWS_ACCESS_KEY_ID
-  #     - AWS_SECRET_ACCESS_KEY
 
-  # testsuite:
-  #   image: docker:18.05
-  #   environment:
-  #     - DOCKER_HOST=tcp://172.17.0.1:2375
-  #   commands:
-  #     - docker run --rm -v $(pwd):/data -w /data hashicorp/terraform fmt --diff --check
-  #   when:
-  #     event: push
-  #   secrets:
-  #     - AWS_ACCESS_KEY_ID
-  #     - AWS_SECRET_ACCESS_KEY
-  #
-  # validate:
-  #   image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
-  #   commands:
-  #     - export MOCK_ID=${TEST_AWS_ACCESS_KEY_ID}
-  #     - export MOCK_KEY=${TEST_AWS_SECRET_ACCESS_KEY}
-  #     - terragrunt validate
-  #   when:
-  #     event: push
-  #   secrets:
-  #     - TF_VAR_MOCK_ID
-  #     - TF_VAR_MOCK_KEY
-  #     - AWS_ACCESS_KEY_ID
-  #     - AWS_SECRET_ACCESS_KEY
-  #
-  # plan:
-  #   image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
-  #   commands:
-  #     - export MOCK_ID=${TEST_AWS_ACCESS_KEY_ID}
-  #     - export MOCK_KEY=${TEST_AWS_SECRET_ACCESS_KEY}
-  #     - terragrunt plan -lock=false -out=plan
-  #   when:
-  #     event: push
-  #   secrets:
-  #     - TF_VAR_MOCK_ID
-  #     - TF_VAR_MOCK_KEY
-  #     - AWS_ACCESS_KEY_ID
-  #     - AWS_SECRET_ACCESS_KEY
-  #
+  init:
+    image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
+    pull: true
+    commands:
+      - export MOCK_ID=$${AWS_ACCESS_KEY_ID}
+      - export MOCK_KEY=$${AWS_SECRET_ACCESS_KEY}
+      - echo -e "provider \"aws\" {\n  region = \"eu-west-2\"\n}" > provider.tf
+      - echo -e "terraform {\n  backend \"s3\" {}\n}" > backend.tf
+      - echo -e "remote_state {\n  backend = \"s3\"\n  config = {\n  bucket = \"dacc-dq-test-coral-team\"\n  region = \"eu-west-2\"\n  dynamodb_table = \"terraform-state\"\n  key = \"test/dq-tf-acl-sftp-monitor-terraform-12.tfstate\"\n  encrypt = true \n  }\n}" > terragrunt.hcl
+      - terragrunt init
+    when:
+      event: push
+    secrets:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
+  testsuite:
+    image: docker:18.05
+    environment:
+      - DOCKER_HOST=tcp://172.17.0.1:2375
+    commands:
+      - docker run --rm -v $(pwd):/data -w /data hashicorp/terraform fmt --diff --check
+    when:
+      event: push
+    secrets:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
+  validate:
+    image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
+    commands:
+      - export MOCK_ID=${TEST_AWS_ACCESS_KEY_ID}
+      - export MOCK_KEY=${TEST_AWS_SECRET_ACCESS_KEY}
+      - terragrunt validate
+    when:
+      event: push
+    secrets:
+      - TF_VAR_MOCK_ID
+      - TF_VAR_MOCK_KEY
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
+  plan:
+    image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
+    commands:
+      - export MOCK_ID=${TEST_AWS_ACCESS_KEY_ID}
+      - export MOCK_KEY=${TEST_AWS_SECRET_ACCESS_KEY}
+      - terragrunt plan -lock=false -out=plan
+    when:
+      event: push
+    secrets:
+      - TF_VAR_MOCK_ID
+      - TF_VAR_MOCK_KEY
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+  
   # apply:
   #   image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
   #   commands:
