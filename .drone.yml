@@ -15,15 +15,18 @@ pipeline:
     image: quay.io/ukhomeofficedigital/dq-docker-terragrunt:v0.23.18
     pull: true
     commands:
-      - echo $${AWS_ACCESS_KEY_ID}
       - export MOCK_ID=$${AWS_ACCESS_KEY_ID}
       - export MOCK_KEY=$${AWS_SECRET_ACCESS_KEY}
-      - echo -e "provider \"aws\" {\n  region = \"eu-west-2\"\n}" > provider.tf
+      - export TF_VAR_ENV_ACCT_ID=$${AWS_ACCESS_KEY_ID}
+      - export TF_VAR_ENV_ACCT_KEY=$${AWS_SECRET_ACCESS_KEY}
+      - echo "provider \"aws\" { region = \"eu-west-2\" }" > provider.tf
       - echo -e "terraform {\n  backend \"s3\" {}\n}" > backend.tf
-      - echo -e "remote_state {\n  backend = \"s3\"\n  config = {\n  bucket = \"dacc-dq-test-coral-team\"\n  region = \"eu-west-2\"\n  dynamodb_table = \"terraform-state\"\n  key = \"test/dq-tf-acl-sftp-monitor-terraform-12.tfstate\"\n  encrypt = true \n  }\n}" > terragrunt.hcl
+      - echo -e "remote_state {\n  backend = \"s3\"\n  config = {\n  bucket = \"dacc-dq-test-coral-team\"\n  region = \"eu-west-2\"\n  dynamodb_table = \"terraform-state\"\n  key = \"test/dq-tf-acl-sftp.tfstate\"\n  encrypt = true \n  }\n}" > terragrunt.hcl
       - terragrunt init
     when:
       event: push
+      branch:
+        exclude: [ master ]
     secrets:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
