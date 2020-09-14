@@ -19,7 +19,7 @@ EOF
 
 
   tags = {
-    Name = "iam-${var.oag_monitor_name}-lambda-${local.naming_suffix}"
+    Name = "iam-${var.oag_monitor_name}-${var.naming_suffix}"
   }
 }
 
@@ -89,7 +89,7 @@ resource "aws_lambda_function" "oag_data_ingest_monitor" {
   }
 
   tags = {
-    Name = "lambda-${local.naming_suffix}"
+    Name = "lambda-${var.oag_monitor_name}-${var.naming_suffix}"
   }
 
   # lifecycle {
@@ -107,7 +107,7 @@ resource "aws_cloudwatch_log_group" "oag_data_ingest_monitor" {
   retention_in_days = 90
 
   tags = {
-    Name = "log-lambda-${local.naming_suffix}"
+    Name = "log-lambda-${var.oag_monitor_name}-${var.naming_suffix}"
   }
 }
 
