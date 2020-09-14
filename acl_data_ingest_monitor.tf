@@ -75,7 +75,7 @@ resource "aws_lambda_function" "acl_data_ingest_monitor" {
   filename         = "${path.module}/lambda/monitor/package/lambda.zip"
   function_name    = "${var.monitor_name}-${var.namespace}-lambda"
   role             = aws_iam_role.acl_data_ingest_monitor.arn
-  handler          = "monitor.lambda_handler"
+  handler          = "function.lambda_handler"
   source_code_hash = data.archive_file.acl_data_ingest_monitor_zip.output_base64sha256
   runtime          = "python3.7"
   timeout          = "900"
