@@ -17,7 +17,7 @@ variable "namespace" {
 }
 
 variable "monitor_name" {
-  default = "acl-sftp-monitor"
+  default = "acl-data-ingest-monitor"
 }
 
 variable "monitor_lambda_run" {
@@ -30,10 +30,6 @@ variable "monitor_lambda_run_schedule" {
 
 variable "input_bucket" {
   default = "s3-dq-acl-archive"
-}
-
-variable "output_path" {
-  default = ""
 }
 
 variable "kms_key_s3" {

@@ -35,7 +35,7 @@ def error_handler(lineno, error, fail=True):
 
         message = "https://{0}.console.aws.amazon.com/cloudwatch/home?region={0}#logEventViewer:group={1};stream={2}".format(region, LOG_GROUP_NAME, LOG_STREAM_NAME)
 
-        send_message_to_slack('CRITICAL KPI Pipeline Error - Needs immediate attention:: {0}'.format(message))
+        send_message_to_slack('ACL Data Ingest Error - Needs immediate attention:: {0}'.format(message))
         if fail:
             sys.exit(1)
 
@@ -54,12 +54,12 @@ def send_message_to_slack(text):
     Args:
         text : the message to be displayed on the Slack channel
     Returns:
-        Slack BITD repsonse
+        Slack ACL repsonse
     """
 
     try:
         post = {
-            "text": ":fire: :sad_parrot: *CRITICAL KPI Pipeline Error - Needs immediate attention:* BITD files are not regularly arriving in *BITD INPUT BUCKET* :sad_parrot: :fire:",
+            "text": ":fire: :sad_parrot: *ACL Data Ingest Error - Needs immediate attention:* ACL files are not regularly arriving in *dq-acl-data-ingest Pod* :sad_parrot: :fire:",
             "attachments": [
                 {
                     "text": "{0}".format(text),
@@ -72,7 +72,7 @@ def send_message_to_slack(text):
                             "short": "false"
                         }
                     ],
-                    "footer": "AWS BITD",
+                    "footer": "AWS ACL",
                     "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
                 }
             ]
@@ -114,7 +114,7 @@ def send_message_to_slack(text):
 # pylint: disable=unused-argument
 def lambda_handler(event, context):
     """
-    Trigger by cloudwatch rules to check BITD files are reguarly receiving or not
+    Trigger by cloudwatch rules to check ACL files are reguarly receiving or not
     Args:
         context (LamdaContext) : Runtime information
     Returns:
@@ -131,8 +131,6 @@ def lambda_handler(event, context):
 
         bucket_name = os.environ['bucket_name']
         LOGGER.info('bucket_name:{0}'.format(bucket_name))
-        path = os.environ['path_']
-        LOGGER.info('path:{0}'.format(path))
         threashold_min = os.environ.get('threashold_min', '1680')
         LOGGER.info('threashold_min:{0}'.format(threashold_min))
 
@@ -143,8 +141,8 @@ def lambda_handler(event, context):
             x_mins = datetime.now() - timedelta(minutes=threashold_min)
             x_mins = x_mins.astimezone(to_zone)
             today = datetime.now().astimezone(to_zone)
-            prefix_search_previous = path + x_mins.strftime('%Y-%m-%d') + "/"
-            prefix_search_today = path + today.strftime('%Y-%m-%d') + "/"
+            prefix_search_previous = x_mins.strftime('%Y-%m-%d') + "/"
+            prefix_search_today = today.strftime('%Y-%m-%d') + "/"
             LOGGER.info('built prefix search previous :{0}'.format(prefix_search_previous))
             LOGGER.info('built prefix search today :{0}'.format(prefix_search_today))
 
@@ -168,13 +166,13 @@ def lambda_handler(event, context):
                 obj_bst = obj_utc.astimezone(to_zone)
                 LOGGER.info('Lastest file timestamps : {0}'.format(obj_bst.strftime('%Y-%m-%d %H:%M:%S')))
                 if x_mins > obj_bst:
-                    LOGGER.info('Please investigate CDLZ subscription. We have not received files for last {0} minutes'.format(threashold_min))
-                    send_message_to_slack('Please investigate *CDLZ* subscription! Not received files for last {0} minutes. Last file {1} was received on {2} '.format(threashold_min, obj_name, obj_bst))
+                    LOGGER.info('Please investigate dq-acl-data-ingest Kube Pod. We have not received files for last {0} minutes'.format(threashold_min))
+                    send_message_to_slack('Please investigate *dq-acl-data-ingest Kube Pod*! Not received files for last {0} minutes. Last file {1} was received on {2} '.format(threashold_min, obj_name, obj_bst))
                 else:
                     LOGGER.info('Files have been received within the last {0} minutes, nothing to do'.format(threashold_min))
             else:
-                LOGGER.info('No BITD file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
-                send_message_to_slack('Please investigate *CDLZ* subscription! No BITD file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
+                LOGGER.info('No ACL file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
+                send_message_to_slack('Please investigate *dq-acl-data-ingest Kube Pod*! No ACL file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
 
         except Exception as err:
             error_handler(sys.exc_info()[2].tb_lineno, err)
