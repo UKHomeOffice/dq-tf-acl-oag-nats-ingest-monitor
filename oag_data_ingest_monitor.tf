@@ -89,7 +89,7 @@ resource "aws_lambda_function" "oag_data_ingest_monitor" {
   }
 
   tags = {
-    Name = "lambda-${var.oag_monitor_name}-${local.naming_suffix}"
+    Name = "lambda-${local.naming_suffix}"
   }
 
   # lifecycle {
