@@ -32,6 +32,22 @@ variable "acl_input_bucket" {
   default = "s3-dq-acl-archive"
 }
 
+variable "oag_monitor_name" {
+  default = "oag-data-ingest-monitor"
+}
+
+variable "oag_monitor_lambda_run" {
+  default = "15"
+}
+
+variable "oag_monitor_lambda_run_schedule" {
+  default = "15"
+}
+
+variable "oag_input_bucket" {
+  default = "s3-dq-oag-archive"
+}
+
 variable "kms_key_s3" {
   description = "The ARN of the KMS key that is used to encrypt S3 buckets"
   default     = "arn:aws:kms:eu-west-2:797728447925:key/ad7169c4-6d6a-4d21-84ee-a3b54f4bef87"

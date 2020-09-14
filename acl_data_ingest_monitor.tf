@@ -67,12 +67,12 @@ EOF
 
 data "archive_file" "acl_data_ingest_monitor_zip" {
   type        = "zip"
-  source_dir  = "${local.path_module}/lambda/monitor/code"
-  output_path = "${local.path_module}/lambda/monitor/package/lambda.zip"
+  source_dir  = "${local.path_module}/lambda/acl_monitor/code"
+  output_path = "${local.path_module}/lambda/acl_monitor/package/lambda.zip"
 }
 
 resource "aws_lambda_function" "acl_data_ingest_monitor" {
-  filename         = "${path.module}/lambda/monitor/package/lambda.zip"
+  filename         = "${path.module}/lambda/acl_monitor/package/lambda.zip"
   function_name    = "${var.acl_monitor_name}-${var.namespace}-lambda"
   role             = aws_iam_role.acl_data_ingest_monitor.arn
   handler          = "function.lambda_handler"
