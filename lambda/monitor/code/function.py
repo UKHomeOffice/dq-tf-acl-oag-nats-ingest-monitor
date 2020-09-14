@@ -160,11 +160,11 @@ def lambda_handler(event, context):
 
             if objs:
                 obj_name = objs[-1].key.split('/')[-1]
-                LOGGER.info('Lastest file found : {0}'.format(objs[-1].key))
+                LOGGER.info('Last file found : {0}'.format(objs[-1].key))
                 obj_ts = datetime.strptime(str(objs[-1].last_modified), '%Y-%m-%d %H:%M:%S+00:00')
                 obj_utc = obj_ts.replace(tzinfo=from_zone)
                 obj_bst = obj_utc.astimezone(to_zone)
-                LOGGER.info('Lastest file timestamps : {0}'.format(obj_bst.strftime('%Y-%m-%d %H:%M:%S')))
+                LOGGER.info('Last file timestamps : {0}'.format(obj_bst.strftime('%Y-%m-%d %H:%M:%S')))
                 if x_mins > obj_bst:
                     LOGGER.info('Please investigate dq-acl-data-ingest Kube Pod. We have not received files for last {0} minutes'.format(threashold_min))
                     send_message_to_slack('Please investigate *dq-acl-data-ingest Kube Pod*! Not received files for last {0} minutes. Last file {1} was received on {2} '.format(threashold_min, obj_name, obj_bst))
