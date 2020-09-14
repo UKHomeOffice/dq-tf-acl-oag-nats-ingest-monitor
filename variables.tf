@@ -1,5 +1,5 @@
 locals {
-  naming_suffix = "${var.monitor_name}-${var.naming_suffix}"
+  naming_suffix = "${var.acl_monitor_name}-${var.naming_suffix}"
   path_module   = var.path_module != "unset" ? var.path_module : path.module
 }
 
@@ -16,19 +16,19 @@ variable "namespace" {
   default = "test"
 }
 
-variable "monitor_name" {
+variable "acl_monitor_name" {
   default = "acl-data-ingest-monitor"
 }
 
-variable "monitor_lambda_run" {
+variable "acl_monitor_lambda_run" {
   default = "1680"
 }
 
-variable "monitor_lambda_run_schedule" {
+variable "acl_monitor_lambda_run_schedule" {
   default = "60"
 }
 
-variable "input_bucket" {
+variable "acl_input_bucket" {
   default = "s3-dq-acl-archive"
 }
 

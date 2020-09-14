@@ -1,5 +1,5 @@
 resource "aws_iam_role" "acl_data_ingest_monitor" {
-  name = "${var.monitor_name}-${var.namespace}-lambda"
+  name = "${var.acl_monitor_name}-${var.namespace}-lambda"
 
   assume_role_policy = <<EOF
 {
@@ -19,12 +19,12 @@ EOF
 
 
   tags = {
-    Name = "iam-${var.monitor_name}-lambda-${local.naming_suffix}"
+    Name = "iam-${var.acl_monitor_name}-lambda-${local.naming_suffix}"
   }
 }
 
 resource "aws_iam_role_policy" "acl_data_ingest_monitor_policy" {
-  name = "${var.monitor_name}-${var.namespace}-lambda-policy"
+  name = "${var.acl_monitor_name}-${var.namespace}-lambda-policy"
   role = aws_iam_role.acl_data_ingest_monitor.id
 
   policy = <<EOF
@@ -38,8 +38,8 @@ resource "aws_iam_role_policy" "acl_data_ingest_monitor_policy" {
       ],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::${var.input_bucket}-${var.namespace}",
-        "arn:aws:s3:::${var.input_bucket}-${var.namespace}/*"]
+        "arn:aws:s3:::${var.acl_input_bucket}-${var.namespace}",
+        "arn:aws:s3:::${var.acl_input_bucket}-${var.namespace}/*"]
     },
     {
       "Action": [
@@ -73,7 +73,7 @@ data "archive_file" "acl_data_ingest_monitor_zip" {
 
 resource "aws_lambda_function" "acl_data_ingest_monitor" {
   filename         = "${path.module}/lambda/monitor/package/lambda.zip"
-  function_name    = "${var.monitor_name}-${var.namespace}-lambda"
+  function_name    = "${var.acl_monitor_name}-${var.namespace}-lambda"
   role             = aws_iam_role.acl_data_ingest_monitor.arn
   handler          = "function.lambda_handler"
   source_code_hash = data.archive_file.acl_data_ingest_monitor_zip.output_base64sha256
@@ -83,13 +83,13 @@ resource "aws_lambda_function" "acl_data_ingest_monitor" {
 
   environment {
     variables = {
-      bucket_name    = "${var.input_bucket}-${var.namespace}"
-      threashold_min = var.monitor_lambda_run
+      bucket_name    = "${var.acl_input_bucket}-${var.namespace}"
+      threashold_min = var.acl_monitor_lambda_run
     }
   }
 
   tags = {
-    Name = "lambda-${var.monitor_name}-${local.naming_suffix}"
+    Name = "lambda-${var.acl_monitor_name}-${local.naming_suffix}"
   }
 
   # lifecycle {
@@ -112,7 +112,7 @@ resource "aws_cloudwatch_log_group" "acl_data_ingest_monitor" {
 }
 
 resource "aws_iam_policy" "acl_data_ingest_monitor_logging" {
-  name        = "${var.monitor_name}-${var.namespace}-lambda-logging"
+  name        = "${var.acl_monitor_name}-${var.namespace}-lambda-logging"
   path        = "/"
   description = "IAM policy for monitor lambda"
 
@@ -148,9 +148,9 @@ resource "aws_iam_role_policy_attachment" "acl_data_ingest_monitor_logs" {
 }
 
 resource "aws_cloudwatch_event_rule" "acl_data_ingest_monitor" {
-  name                = "${var.monitor_name}-${var.namespace}-cw-event-rule"
+  name                = "${var.acl_monitor_name}-${var.namespace}-cw-event-rule"
   description         = "Fires every hour"
-  schedule_expression = "rate(${var.monitor_lambda_run_schedule} minutes)"
+  schedule_expression = "rate(${var.acl_monitor_lambda_run_schedule} minutes)"
   is_enabled          = var.namespace == "prod" ? "false" : "true"
 }
 
