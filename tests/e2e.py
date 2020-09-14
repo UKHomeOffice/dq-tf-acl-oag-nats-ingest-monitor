@@ -15,7 +15,7 @@ class TestE2E(unittest.TestCase):
               skip_get_ec2_platforms = true
             }
 
-            module "acl_data_ingest_monitor" {
+            module "kube_data_ingest_monitor" {
               source = "./mymodule"
 
               providers = {
