@@ -151,6 +151,7 @@ resource "aws_cloudwatch_event_rule" "acl_data_ingest_monitor" {
   name                = "${var.monitor_name}-${var.namespace}-cw-event-rule"
   description         = "Fires every hour"
   schedule_expression = "rate(${var.monitor_lambda_run_schedule} minutes)"
+  is_enabled          = var.namespace == "prod" ? "false" : "true"
 }
 
 resource "aws_cloudwatch_event_target" "acl_data_ingest_monitor" {
