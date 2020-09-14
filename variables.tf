@@ -1,5 +1,5 @@
 locals {
-  naming_suffix = "${var.pipeline_name}-${var.naming_suffix}"
+  naming_suffix = "${var.monitor_name}-${var.naming_suffix}"
   path_module   = var.path_module != "unset" ? var.path_module : path.module
 }
 
