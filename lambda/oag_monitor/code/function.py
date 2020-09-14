@@ -59,7 +59,7 @@ def send_message_to_slack(text):
 
     try:
         post = {
-            "text": ":fire: :sad_parrot: *OAG Data Ingest Error - Needs immediate attention:* OAG files are not regularly arriving in *dq-acl-data-ingest Pod* :sad_parrot: :fire:",
+            "text": ":fire: :sad_parrot: *OAG Data Ingest Error - Needs immediate attention:* OAG files are not regularly arriving in *dq-oag-data-ingest Pod* :sad_parrot: :fire:",
             "attachments": [
                 {
                     "text": "{0}".format(text),
