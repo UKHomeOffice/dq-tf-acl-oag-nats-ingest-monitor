@@ -47,25 +47,25 @@ variable "oag_input_bucket" {
   default = "s3-dq-oag-archive"
 }
 
-# variable "nats_monitor_name" {
-#   default = "oag-data-ingest-monitor"
-# }
-#
-# variable "nats_monitor_lambda_run" {
-#   default = "15"
-# }
-#
-# variable "nats_monitor_lambda_run_schedule" {
-#   default = "15"
-# }
-#
-# variable "nats_input_bucket" {
-#   default = "s3-dq-nats-archive"
-# }
-#
-# variable "output_path_bitd" {
-#   default = "nats/"
-# }
+variable "nats_monitor_name" {
+  default = "nats-data-ingest-monitor"
+}
+
+variable "nats_monitor_lambda_run" {
+  default = "15"
+}
+
+variable "nats_monitor_lambda_run_schedule" {
+  default = "15"
+}
+
+variable "nats_input_bucket" {
+  default = "s3-dq-nats-archive"
+}
+
+variable "output_path_bitd" {
+  default = "nats/"
+}
 
 variable "kms_key_s3" {
   description = "The ARN of the KMS key that is used to encrypt S3 buckets"
