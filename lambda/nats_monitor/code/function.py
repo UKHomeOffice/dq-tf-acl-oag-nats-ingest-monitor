@@ -59,7 +59,7 @@ def send_message_to_slack(text):
 
     try:
         post = {
-            "text": ":fire: :sad_parrot: *NATS Data Ingest Error - Needs immediate attention:* OAG files are not regularly arriving in *dq-oag-data-ingest Pod* :sad_parrot: :fire:",
+            "text": ":fire: :sad_parrot: *NATS Data Ingest Error - Needs immediate attention:* NATS files are not regularly arriving in *dq-nats-data-ingest Pod* :sad_parrot: :fire:",
             "attachments": [
                 {
                     "text": "{0}".format(text),
@@ -143,10 +143,11 @@ def lambda_handler(event, context):
             x_mins = datetime.now() - timedelta(minutes=threashold_min)
             x_mins = x_mins.astimezone(to_zone)
             today = datetime.now().astimezone(to_zone)
-            year_dir = datetime.date.today().year
-            get_month = datetime.date.today().month
+            get_year = datetime.now().year
+            year_dir = str(get_year)
+            get_month = datetime.now().month
             month_dir = (str(get_month).zfill(2))
-            prefix_search_previous = path + year_dir + "/" + month_dir "/"
+            prefix_search_previous = path + year_dir + "/" + month_dir + "/"
             prefix_search_today = path + year_dir + "/" + month_dir +  "/"
             LOGGER.info('built prefix search previous :{0}'.format(prefix_search_previous))
             LOGGER.info('built prefix search today :{0}'.format(prefix_search_today))
@@ -176,8 +177,8 @@ def lambda_handler(event, context):
                 else:
                     LOGGER.info('Files have been received within the last {0} minutes, nothing to do'.format(threashold_min))
             else:
-                LOGGER.info('No OAG file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
-                send_message_to_slack('Please investigate *dq-nats-data-ingest Kube Pod*! No OAG file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
+                LOGGER.info('No NATS file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
+                send_message_to_slack('Please investigate *dq-nats-data-ingest Kube Pod*! No NATS file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
 
         except Exception as err:
             error_handler(sys.exc_info()[2].tb_lineno, err)
