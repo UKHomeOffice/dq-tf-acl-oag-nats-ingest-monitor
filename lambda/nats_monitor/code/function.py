@@ -35,7 +35,7 @@ def error_handler(lineno, error, fail=True):
 
         message = "https://{0}.console.aws.amazon.com/cloudwatch/home?region={0}#logEventViewer:group={1};stream={2}".format(region, LOG_GROUP_NAME, LOG_STREAM_NAME)
 
-        send_message_to_slack('NATS Data Ingest Error - Needs immediate attention:: {0}'.format(message))
+        send_message_to_slack('Pipeline error: {0}'.format(message))
         if fail:
             sys.exit(1)
 
@@ -114,7 +114,7 @@ def send_message_to_slack(text):
 # pylint: disable=unused-argument
 def lambda_handler(event, context):
     """
-    Trigger by cloudwatch rules to check NATS files are reguarly receiving or not
+    Trigger by cloudwatch rules to check NATS file are reguarly receiving or not
     Args:
         context (LamdaContext) : Runtime information
     Returns:
@@ -142,42 +142,34 @@ def lambda_handler(event, context):
             threashold_min = int(threashold_min)
             x_mins = datetime.now() - timedelta(minutes=threashold_min)
             x_mins = x_mins.astimezone(to_zone)
-            today = datetime.now().astimezone(to_zone)
             get_year = datetime.now().year
             year_dir = str(get_year)
             get_month = datetime.now().month
             month_dir = (str(get_month).zfill(2))
             get_date = datetime.now().day
             date_dir = (str(get_date).zfill(2))
-            prefix_search_previous = path + year_dir + "/" + month_dir + "/" +  date_dir + "/"
-            prefix_search_today = path + year_dir + "/" + month_dir + "/" + date_dir + "/"
-            LOGGER.info('built prefix search previous :{0}'.format(prefix_search_previous))
-            LOGGER.info('built prefix search today :{0}'.format(prefix_search_today))
+            prefix_search = path + year_dir + "/" + month_dir + "/" + date_dir + "/"
+            LOGGER.info('built prefix to search :{0}'.format(prefix_search))
 
-            LOGGER.info('Search bucket: {0} and search_paths : {1} and {2}'.format(bucket_name, prefix_search_previous, prefix_search_today))
+            LOGGER.info('Search bucket: {0} and search_path : {1}'.format(bucket_name, prefix_search))
             s3 = boto3.resource("s3")
             get_last_modified = lambda obj: int(obj.last_modified.strftime('%s'))
             bucket = s3.Bucket(bucket_name)
-
-            # Search objects in the prefix path
-            objs_prev = [obj for obj in bucket.objects.filter(Prefix=prefix_search_previous)]
-            objs_today = [obj for obj in bucket.objects.filter(Prefix=prefix_search_today)]
-
-            # Get recent from the list
-            objs = [obj for obj in sorted(objs_prev + objs_today, key=get_last_modified)]
+            objs = [obj for obj in bucket.objects.filter(Prefix=prefix_search)]
+            objs = [obj for obj in sorted(objs, key=get_last_modified)]
 
             if objs:
                 obj_name = objs[-1].key.split('/')[-1]
-                LOGGER.info('Last file found : {0}'.format(objs[-1].key))
+                LOGGER.info('Lastest file found : {0}'.format(objs[-1].key))
                 obj_ts = datetime.strptime(str(objs[-1].last_modified), '%Y-%m-%d %H:%M:%S+00:00')
                 obj_utc = obj_ts.replace(tzinfo=from_zone)
                 obj_bst = obj_utc.astimezone(to_zone)
-                LOGGER.info('Last file timestamps : {0}'.format(obj_bst.strftime('%Y-%m-%d %H:%M:%S')))
+                LOGGER.info('Lastest file timestamps : {0}'.format(obj_bst.strftime('%Y-%m-%d %H:%M:%S')))
                 if x_mins > obj_bst:
                     LOGGER.info('Please investigate dq-nats-data-ingest Kube Pod. We have not received files for last {0} minutes'.format(threashold_min))
                     send_message_to_slack('Please investigate *dq-nats-data-ingest Kube Pod*! Not received files for last {0} minutes. Last file {1} was received on {2} '.format(threashold_min, obj_name, obj_bst))
                 else:
-                    LOGGER.info('Files have been received within the last {0} minutes, nothing to do'.format(threashold_min))
+                    LOGGER.info('Files are receiving within last {0} minutes, nothing to do'.format(threashold_min))
             else:
                 LOGGER.info('No NATS file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
                 send_message_to_slack('Please investigate *dq-nats-data-ingest Kube Pod*! No NATS file found for {0}'.format(x_mins.strftime('%Y-%m-%d')))
