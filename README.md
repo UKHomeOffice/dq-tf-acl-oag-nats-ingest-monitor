@@ -34,6 +34,6 @@ Tasks include:
 - **nats-data-ingest-monitor-notprod-lambda**
   - *dq-nats-data-ingest*: This is the Kube Pod which gets from remote SFTP Server
   - *s3-dq-nats-archive-notprod*: This is the monitored bucket which *dq-nats-data-ingest* lands ingested data.
-  - *<YYYY>/<MM>/<DD>/*: The path monitored for update timestamps.
+  - *nats/<YYYY>/<MM>/<DD>/*: The path monitored for update timestamps.
   - *Once 4 Minutes*: This file arrives roughly every minute.
   - *15 minutes*: The expected time period a file should arrive is roughly every 4 minutes. An extra 11 minutes is given before a Slack alert is generated.

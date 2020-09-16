@@ -147,8 +147,10 @@ def lambda_handler(event, context):
             year_dir = str(get_year)
             get_month = datetime.now().month
             month_dir = (str(get_month).zfill(2))
-            prefix_search_previous = path + year_dir + "/" + month_dir + "/"
-            prefix_search_today = path + year_dir + "/" + month_dir +  "/"
+            get_date = datetime.now().day
+            date_dir = (str(get_date).zfill(2))
+            prefix_search_previous = path + year_dir + "/" + month_dir + "/" +  date_dir + "/"
+            prefix_search_today = path + year_dir + "/" + month_dir + "/" + date_dir + "/"
             LOGGER.info('built prefix search previous :{0}'.format(prefix_search_previous))
             LOGGER.info('built prefix search today :{0}'.format(prefix_search_today))
 
