@@ -152,7 +152,7 @@ resource "aws_cloudwatch_event_rule" "nats_data_ingest_monitor" {
   name                = "${var.nats_monitor_name}-${var.namespace}-cw-event-rule"
   description         = "Fires every hour"
   schedule_expression = "rate(${var.nats_monitor_lambda_run_schedule} minutes)"
-  is_enabled          = var.namespace == "prod" ? "false" : "true"
+  is_enabled          = var.namespace == "prod" ? "true" : "true"
 }
 
 resource "aws_cloudwatch_event_target" "nats_data_ingest_monitor" {
