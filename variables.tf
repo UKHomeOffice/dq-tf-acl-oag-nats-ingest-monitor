@@ -20,7 +20,7 @@ variable "acl_monitor_name" {
 }
 
 variable "acl_monitor_lambda_run" {
-  default = "1680"
+  default = "1440"
 }
 
 variable "acl_monitor_lambda_run_schedule" {
