@@ -136,11 +136,11 @@ def lambda_handler(event, context):
 
         try:
             from_zone = tz.tzutc()
-            to_zone = tz.gettz('Europe/London')
+            #to_zone = tz.gettz('Europe/London')
             threashold_min = int(threashold_min)
             x_mins = datetime.now() - timedelta(minutes=threashold_min)
-            x_mins = x_mins.astimezone(to_zone)
-            today = datetime.now().astimezone(to_zone)
+            x_mins = x_mins.astimezone(from_zone)
+            today = datetime.now().astimezone(from_zone)
             prefix_search_previous = x_mins.strftime('%Y-%m-%d') + "/"
             prefix_search_today = today.strftime('%Y-%m-%d') + "/"
             LOGGER.info('built prefix search previous :{0}'.format(prefix_search_previous))
@@ -163,11 +163,11 @@ def lambda_handler(event, context):
                 LOGGER.info('Last file found : {0}'.format(objs[-1].key))
                 obj_ts = datetime.strptime(str(objs[-1].last_modified), '%Y-%m-%d %H:%M:%S+00:00')
                 obj_utc = obj_ts.replace(tzinfo=from_zone)
-                obj_bst = obj_utc.astimezone(to_zone)
-                LOGGER.info('Last file timestamps : {0}'.format(obj_bst.strftime('%Y-%m-%d %H:%M:%S')))
-                if x_mins > obj_bst:
+                #obj_bst = obj_utc.astimezone(to_zone)
+                LOGGER.info('Last file timestamps : {0}'.format(obj_utc.strftime('%Y-%m-%d %H:%M:%S')))
+                if x_mins > obj_utc:
                     LOGGER.info('Please investigate dq-oag-data-ingest Kube Pod. We have not received files for last {0} minutes'.format(threashold_min))
-                    send_message_to_slack('Please investigate *dq-oag-data-ingest Kube Pod*! Not received files for last {0} minutes. Last file {1} was received on {2} '.format(threashold_min, obj_name, obj_bst))
+                    send_message_to_slack('Please investigate *dq-oag-data-ingest Kube Pod*! Not received files for last {0} minutes. Last file {1} was received on {2} '.format(threashold_min, obj_name, obj_utc))
                 else:
                     LOGGER.info('Files have been received within the last {0} minutes, nothing to do'.format(threashold_min))
             else:
