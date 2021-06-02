@@ -67,21 +67,21 @@ variable "output_path_bitd" {
   default = "nats/"
 }
 
-variable "int_tab_monitor_name" {
-  default = "int-tab-monitor"
-}
-
-variable "int_tab_monitor_lambda_run" {
-  default = "900"
-}
-
-variable "int_tab_input_bucket" {
-  default = "s3-dq-data-archive-bucket"
-}
-
-variable "output_path_int_tab" {
-  default = "tableau-int/green/"
-}
+# variable "int_tab_monitor_name" {
+#   default = "int-tab-monitor"
+# }
+#
+# variable "int_tab_monitor_lambda_run" {
+#   default = "900"
+# }
+#
+# variable "int_tab_input_bucket" {
+#   default = "s3-dq-data-archive-bucket"
+# }
+#
+# variable "output_path_int_tab" {
+#   default = "tableau-int/green/"
+# }
 
 variable "kms_key_s3" {
   description = "The ARN of the KMS key that is used to encrypt S3 buckets"
