@@ -75,12 +75,12 @@ variable "int_tab_monitor_lambda_run" {
   default = "900"
 }
 
-variable "int_tab_monitor_lambda_run_schedule" {
-  default = "900"
-}
-
 variable "int_tab_input_bucket" {
   default = "s3-dq-data-archive-bucket"
+}
+
+variable "output_path_int_tab" {
+  default = "tableau-int/green/"
 }
 
 variable "kms_key_s3" {
