@@ -23,9 +23,8 @@ EOF
   }
 }
 
-resource "aws_iam_role_policy" "acl_data_ingest_monitor_policy" {
+resource "aws_iam_policy" "acl_data_ingest_monitor_policy" {
   name = "${var.acl_monitor_name}-${var.namespace}-lambda-policy"
-  role = aws_iam_role.acl_data_ingest_monitor.id
 
   policy = <<EOF
 {
@@ -63,6 +62,11 @@ resource "aws_iam_role_policy" "acl_data_ingest_monitor_policy" {
 }
 EOF
 
+}
+
+resource "aws_iam_role_policy_attachment" "acl_data_ingest_monitor_policy" {
+  role       = aws_iam_role.acl_data_ingest_monitor.id
+  policy_arn = aws_iam_policy.acl_data_ingest_monitor_policy.arn
 }
 
 data "archive_file" "acl_data_ingest_monitor_zip" {

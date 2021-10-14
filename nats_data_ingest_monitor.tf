@@ -23,9 +23,8 @@ EOF
   }
 }
 
-resource "aws_iam_role_policy" "nats_data_ingest_monitor_policy" {
+resource "aws_iam_policy" "nats_data_ingest_monitor_policy" {
   name = "${var.nats_monitor_name}-${var.namespace}-lambda-policy"
-  role = aws_iam_role.nats_data_ingest_monitor.id
 
   policy = <<EOF
 {
@@ -63,6 +62,11 @@ resource "aws_iam_role_policy" "nats_data_ingest_monitor_policy" {
 }
 EOF
 
+}
+
+resource "aws_iam_role_policy_attachment" "nats_data_ingest_monitor_policy" {
+  role       = aws_iam_role.nats_data_ingest_monitor.id
+  policy_arn = aws_iam_policy.nats_data_ingest_monitor_policy.arn
 }
 
 data "archive_file" "nats_data_ingest_monitor_zip" {
