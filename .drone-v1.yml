@@ -21,7 +21,7 @@ x-anchors:
     - echo "export AWS_SECRET_ACCESS_KEY=$(cat aws_creds.json | grep secret_key | awk -F ' ' '{print $2}')" >> set_aws_secrets.sh
     - echo "export AWS_DEFAULT_REGION=eu-west-2" >> set_aws_secrets.sh
     # Since AWS is eventually consistent we need to sleep a little while so the AWS key is created and made available
-    - sleep 10
+    - sleep 15
 
 steps:
 - name: testsuite
@@ -52,13 +52,13 @@ steps:
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/tf-testrunner:32
   commands:
-  # - source ./set_aws_secrets.sh
+  - source ./set_aws_secrets.sh
   - python -m unittest tests/*_test.py
-  environment:
-    AWS_ACCESS_KEY_ID:
-      from_secret: AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY:
-      from_secret: AWS_SECRET_ACCESS_KEY
+  # environment:
+  #   AWS_ACCESS_KEY_ID:
+  #     from_secret: AWS_ACCESS_KEY_ID
+  #   AWS_SECRET_ACCESS_KEY:
+  #     from_secret: AWS_SECRET_ACCESS_KEY
   when:
     event:
     - push
