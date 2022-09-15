@@ -33,32 +33,32 @@ steps:
     event:
     - push
 
-- name: retrieve_aws_secrets_test
-  pull: if-not-exists
-  image: *vault-image
-  commands:
-    *retrieve-deployment-aws-key
-  environment:
-    VAULT_ADDR:
-      from_secret: VAULT_ADDR_DEV
-    VAULT_TOKEN:
-      from_secret: VAULT_TOKEN_DEV
-  when:
-    event:
-      - push
-      - promote
+# - name: retrieve_aws_secrets_test
+#   pull: if-not-exists
+#   image: *vault-image
+#   commands:
+#     *retrieve-deployment-aws-key
+#   environment:
+#     VAULT_ADDR:
+#       from_secret: VAULT_ADDR_DEV
+#     VAULT_TOKEN:
+#       from_secret: VAULT_TOKEN_DEV
+#   when:
+#     event:
+#       - push
+#       - promote
       
 - name: run-testrunner-tests
   pull: if-not-exists
   image: quay.io/ukhomeofficedigital/tf-testrunner:32
   commands:
-  - source ./set_aws_secrets.sh
+  # - source ./set_aws_secrets.sh
   - python -m unittest tests/*_test.py
-  # environment:
-  #   AWS_ACCESS_KEY_ID:
-  #     from_secret: AWS_ACCESS_KEY_ID
-  #   AWS_SECRET_ACCESS_KEY:
-  #     from_secret: AWS_SECRET_ACCESS_KEY
+  environment:
+    AWS_ACCESS_KEY_ID:
+      from_secret: AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: AWS_SECRET_ACCESS_KEY
   when:
     event:
     - push
