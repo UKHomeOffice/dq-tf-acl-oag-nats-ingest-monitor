@@ -47,8 +47,8 @@ resource "aws_iam_policy" "nats_data_ingest_monitor_policy" {
         "kms:GenerateDataKey*",
         "kms:DescribeKey"
       ],
-      "Effect": "Allow",
-      "Resource": "${var.kms_key_s3}"
+      "Effect": "Allow",      
+      "Resource": "["${aws_kms_key.nats_bucket_key.arn}"]"
     },
     {
       "Action": [
