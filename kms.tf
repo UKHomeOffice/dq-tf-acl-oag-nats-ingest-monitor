@@ -1,6 +1,3 @@
-data "aws_caller_identity" "current" {
-}
-
 resource "aws_kms_key" "nats_bucket_key" {
   description             = "This key is used to encrypt daily oag-nats-ingest-monitor"
   deletion_window_in_days = 7
