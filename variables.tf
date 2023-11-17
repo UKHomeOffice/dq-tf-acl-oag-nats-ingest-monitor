@@ -83,7 +83,3 @@ variable "output_path_bitd" {
 #   default = "tableau-int/green/"
 # }
 
-variable "kms_key_s3" {
-  description = "The ARN of the KMS key that is used to encrypt S3 buckets"
-  default     = "arn:aws:kms:eu-west-2:797728447925:key/ad7169c4-6d6a-4d21-84ee-a3b54f4bef87"
-}
