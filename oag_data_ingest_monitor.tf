@@ -135,7 +135,7 @@ resource "aws_iam_policy" "oag_data_ingest_monitor_logging" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "${aws_cloudwatch_log_group.oag_data_ingest_monito.arn}:log-stream:*"
+      "Resource": "${aws_cloudwatch_log_group.oag_data_ingest_monitor.arn}:log-stream:*"
     }
   ]
 }
