@@ -81,7 +81,7 @@ resource "aws_lambda_function" "acl_data_ingest_monitor" {
   role             = aws_iam_role.acl_data_ingest_monitor.arn
   handler          = "function.lambda_handler"
   source_code_hash = data.archive_file.acl_data_ingest_monitor_zip.output_base64sha256
-  runtime          = "python3.7"
+  runtime          = "python3.11"
   timeout          = "900"
   memory_size      = "2048"
 
@@ -96,13 +96,14 @@ resource "aws_lambda_function" "acl_data_ingest_monitor" {
     Name = "lambda-${var.acl_monitor_name}-${var.naming_suffix}"
   }
 
-  # lifecycle {
-  #   ignore_changes = [
-  #     filename,
-  #     last_modified,
-  #     source_code_hash,
-  #   ]
-  # }
+  lifecycle {
+    ignore_changes = [
+      filename,
+      last_modified,
+      runtime,
+      source_code_hash,
+    ]
+  }
 
 }
 
