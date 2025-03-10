@@ -81,7 +81,7 @@ resource "aws_lambda_function" "nats_data_ingest_monitor" {
   role             = aws_iam_role.nats_data_ingest_monitor.arn
   handler          = "function.lambda_handler"
   source_code_hash = data.archive_file.nats_data_ingest_monitor_zip.output_base64sha256
-  runtime          = "python3.7"
+  runtime          = "python3.11"
   timeout          = "900"
   memory_size      = "2048"
 
@@ -97,13 +97,14 @@ resource "aws_lambda_function" "nats_data_ingest_monitor" {
     Name = "lambda-${var.nats_monitor_name}-${var.naming_suffix}"
   }
 
-  # lifecycle {
-  #   ignore_changes = [
-  #     filename,
-  #     last_modified,
-  #     source_code_hash,
-  #   ]
-  # }
+  lifecycle {
+    ignore_changes = [
+      filename,
+      last_modified,
+      runtime,
+      source_code_hash,
+    ]
+  }
 
 }
 
