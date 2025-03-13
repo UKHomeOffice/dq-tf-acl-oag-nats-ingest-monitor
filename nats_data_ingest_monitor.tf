@@ -97,14 +97,14 @@ resource "aws_lambda_function" "nats_data_ingest_monitor" {
     Name = "lambda-${var.nats_monitor_name}-${var.naming_suffix}"
   }
 
-  #lifecycle {
-  #  ignore_changes = [
-  #    filename,
-  #    last_modified,
-  #    runtime,
-  #    source_code_hash,
-  #  ]
-  #}
+  lifecycle {
+    ignore_changes = [
+      filename,
+      last_modified,
+      runtime,
+      source_code_hash,
+    ]
+  }
 
 }
 

@@ -96,14 +96,14 @@ resource "aws_lambda_function" "acl_data_ingest_monitor" {
     Name = "lambda-${var.acl_monitor_name}-${var.naming_suffix}"
   }
 
-  #lifecycle {
-  #  ignore_changes = [
-  #    filename,
-  #    last_modified,
-  #    runtime,
-  #    source_code_hash,
-  #  ]
-  #}
+  lifecycle {
+    ignore_changes = [
+      filename,
+      last_modified,
+      runtime,
+      source_code_hash,
+    ]
+  }
 
 }
 
