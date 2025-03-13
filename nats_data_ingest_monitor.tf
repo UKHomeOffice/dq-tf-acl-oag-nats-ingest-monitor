@@ -102,7 +102,7 @@ resource "aws_lambda_function" "nats_data_ingest_monitor" {
       filename,
       last_modified,
       runtime,
-     source_code_hash,
+      source_code_hash,
     ]
   }
 
